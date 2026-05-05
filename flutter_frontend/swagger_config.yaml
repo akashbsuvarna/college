@@ -1,0 +1,8 @@
+input_folder: 'lib/swagger/'
+output_folder: 'lib/swagger/generated/'
+separate_models: true
+use_path_for_request_names: true
+include_standard_builders: true
+generate_built_value_models: false
+# We are using json_serializable
+executable: 'swagger_dart_code_generator'

@@ -1,0 +1,87 @@
+﻿Analyzing flutter_frontend...
+
+  error - lib\admin\dashboard\views\dashboard_view.dart:130:66 - 1 positional argument expected by 'withOpacity', but 0 found. Try adding the missing argument. - not_enough_positional_arguments
+  error - lib\admin\dashboard\views\dashboard_view.dart:302:64 - 1 positional argument expected by 'withOpacity', but 0 found. Try adding the missing argument. - not_enough_positional_arguments
+  error - lib\admin\dashboard\views\dashboard_view.dart:605:64 - 1 positional argument expected by 'withOpacity', but 0 found. Try adding the missing argument. - not_enough_positional_arguments
+  error - lib\admin\dashboard\views\dashboard_view.dart:757:41 - 1 positional argument expected by 'withOpacity', but 0 found. Try adding the missing argument. - not_enough_positional_arguments
+  error - lib\admin\dashboard\views\dashboard_view.dart:884:44 - 1 positional argument expected by 'withOpacity', but 0 found. Try adding the missing argument. - not_enough_positional_arguments
+  error - lib\admin\dashboard\views\dashboard_view.dart:885:44 - 1 positional argument expected by 'withOpacity', but 0 found. Try adding the missing argument. - not_enough_positional_arguments
+  error - lib\admin\dashboard\views\dashboard_view.dart:907:51 - 1 positional argument expected by 'withOpacity', but 0 found. Try adding the missing argument. - not_enough_positional_arguments
+  error - lib\admin\teacher\views\teacher_list_view.dart:224:56 - 1 positional argument expected by 'withOpacity', but 0 found. Try adding the missing argument. - not_enough_positional_arguments
+  error - lib\admin\teacher\views\teacher_list_view.dart:334:55 - 1 positional argument expected by 'withOpacity', but 0 found. Try adding the missing argument. - not_enough_positional_arguments
+  error - lib\admin\teacher\views\teacher_list_view.dart:340:64 - 1 positional argument expected by 'withOpacity', but 0 found. Try adding the missing argument. - not_enough_positional_arguments
+  error - lib\admin\teacher\views\teacher_list_view.dart:429:53 - 1 positional argument expected by 'withOpacity', but 0 found. Try adding the missing argument. - not_enough_positional_arguments
+  error - lib\admin\teacher\views\teacher_list_view.dart:432:57 - 1 positional argument expected by 'withOpacity', but 0 found. Try adding the missing argument. - not_enough_positional_arguments
+  error - lib\admin\teacher\views\teacher_list_view.dart:521:45 - 1 positional argument expected by 'withOpacity', but 0 found. Try adding the missing argument. - not_enough_positional_arguments
+  error - lib\admin\teacher\views\teacher_list_view.dart:562:47 - 1 positional argument expected by 'withOpacity', but 0 found. Try adding the missing argument. - not_enough_positional_arguments
+  error - lib\admin\teacher\views\teacher_list_view.dart:566:39 - 1 positional argument expected by 'withOpacity', but 0 found. Try adding the missing argument. - not_enough_positional_arguments
+  error - lib\admin\widgets\admin_sidebar.dart:2:8 - Target of URI doesn't exist: 'package:college_project/core/app_theme.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist. - uri_does_not_exist
+  error - lib\admin\widgets\admin_sidebar.dart:3:8 - Target of URI doesn't exist: 'package:college_project/core/app_theme.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist. - uri_does_not_exist
+  error - lib\admin\widgets\admin_sidebar.dart:143:31 - Invalid constant value. - invalid_constant
+  error - lib\admin\widgets\admin_sidebar.dart:143:31 - Undefined name 'AppTheme'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\admin\widgets\admin_sidebar.dart:162:34 - Invalid constant value. - invalid_constant
+  error - lib\admin\widgets\admin_sidebar.dart:162:34 - Undefined name 'AppTheme'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\admin\widgets\admin_sidebar.dart:172:34 - Invalid constant value. - invalid_constant
+  error - lib\admin\widgets\admin_sidebar.dart:172:34 - Undefined name 'AppTheme'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\admin\widgets\admin_sidebar.dart:184:30 - Invalid constant value. - invalid_constant
+  error - lib\admin\widgets\admin_sidebar.dart:184:30 - Undefined name 'AppTheme'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\admin\widgets\admin_sidebar.dart:191:30 - Invalid constant value. - invalid_constant
+  error - lib\admin\widgets\admin_sidebar.dart:191:30 - Undefined name 'AppTheme'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\admin\widgets\admin_sidebar.dart:211:17 - Undefined name 'AppTheme'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\admin\widgets\admin_sidebar.dart:216:26 - Undefined name 'AppTheme'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\admin\widgets\admin_sidebar.dart:238:27 - Undefined name 'AppTheme'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\admin\widgets\admin_sidebar.dart:239:27 - Undefined name 'AppTheme'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\admin\widgets\admin_sidebar.dart:249:33 - Undefined name 'AppTheme'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\admin\widgets\admin_sidebar.dart:250:33 - Undefined name 'AppTheme'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\admin\widgets\admin_sidebar.dart:266:34 - Invalid constant value. - invalid_constant
+  error - lib\admin\widgets\admin_sidebar.dart:266:34 - Undefined name 'AppTheme'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\admin\widgets\admin_sidebar.dart:293:32 - Undefined name 'AppTheme'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\admin\widgets\admin_sidebar.dart:297:28 - Invalid constant value. - invalid_constant
+  error - lib\admin\widgets\admin_sidebar.dart:297:28 - Undefined name 'AppTheme'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\admin\widgets\admin_sidebar.dart:312:34 - Invalid constant value. - invalid_constant
+  error - lib\admin\widgets\admin_sidebar.dart:312:34 - Undefined name 'AppTheme'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\admin\widgets\admin_sidebar.dart:320:44 - Invalid constant value. - invalid_constant
+  error - lib\admin\widgets\admin_sidebar.dart:320:44 - Undefined name 'AppTheme'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\admin\widgets\admin_sidebar.dart:327:36 - Undefined name 'AppTheme'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+   info - extract.dart:17:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\admin\dashboard\views\dashboard_view.dart:130:54 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\dashboard\views\dashboard_view.dart:302:52 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\dashboard\views\dashboard_view.dart:587:36 - 'translate' is deprecated and shouldn't be used. Use translateByVector3, translateByVector4, or translateByDouble instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\dashboard\views\dashboard_view.dart:593:39 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\dashboard\views\dashboard_view.dart:594:39 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\dashboard\views\dashboard_view.dart:605:52 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\dashboard\views\dashboard_view.dart:708:22 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\dashboard\views\dashboard_view.dart:710:41 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\dashboard\views\dashboard_view.dart:757:29 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\dashboard\views\dashboard_view.dart:884:32 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\dashboard\views\dashboard_view.dart:885:32 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\dashboard\views\dashboard_view.dart:907:39 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\dashboard\views\dashboard_view.dart:930:44 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\add_edit_teacher_view.dart:389:32 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\add_edit_teacher_view.dart:454:45 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\add_edit_teacher_view.dart:507:11 - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\add_edit_teacher_view.dart:513:45 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\add_edit_teacher_view.dart:566:35 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\add_edit_teacher_view.dart:570:27 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\teacher_detail_view.dart:103:47 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\teacher_detail_view.dart:110:40 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\teacher_detail_view.dart:147:53 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\teacher_detail_view.dart:150:57 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\teacher_detail_view.dart:315:52 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\teacher_detail_view.dart:318:56 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\teacher_detail_view.dart:365:26 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\teacher_detail_view.dart:405:22 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\teacher_detail_view.dart:407:41 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\teacher_list_view.dart:201:29 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+   info - lib\admin\teacher\views\teacher_list_view.dart:224:44 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\teacher_list_view.dart:334:43 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\teacher_list_view.dart:340:52 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\teacher_list_view.dart:429:41 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\teacher_list_view.dart:432:45 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\teacher_list_view.dart:521:33 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\teacher_list_view.dart:562:35 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\teacher\views\teacher_list_view.dart:566:27 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\admin\widgets\admin_sidebar.dart:2:8 - The imported package 'college_project' isn't a dependency of the importing package. Try adding a dependency for 'college_project' in the 'pubspec.yaml' file. - depend_on_referenced_packages
+   info - lib\admin\widgets\admin_sidebar.dart:3:8 - The imported package 'college_project' isn't a dependency of the importing package. Try adding a dependency for 'college_project' in the 'pubspec.yaml' file. - depend_on_referenced_packages
+
+83 issues found.

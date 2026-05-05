@@ -1,0 +1,19 @@
+{
+  "name": "college-management-system",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "setup": "npm install --prefix nodejsss && cd flutter_frontend && flutter pub get",
+    "seed": "npm run seed --prefix nodejsss",
+    "api": "npm run dev --prefix nodejsss",
+    "web": "cd flutter_frontend && flutter run -d chrome",
+    "dev": "concurrently \"npm run api\" \"npm run web\"",
+    "build": "bash flutter_frontend/build.sh"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  }
+}
