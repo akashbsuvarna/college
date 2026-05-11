@@ -87,6 +87,7 @@ class SubjectViewModel extends ChangeNotifier {
   }
 
   Future<void> addSubject(Subject subject) async {
+    _errorMessage = null; // Clear previous errors
     try {
       final headers = await _getHeaders();
       final response = await http
@@ -95,22 +96,29 @@ class SubjectViewModel extends ChangeNotifier {
             headers: headers,
             body: jsonEncode(subject.toJson()),
           )
-          .timeout(const Duration(seconds: 8));
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         final created = Subject.fromJson(jsonDecode(response.body));
         _allSubjects.insert(0, created);
       } else {
-        _errorMessage = 'Add failed: ${response.statusCode}';
+        // Parse the actual error message from the backend
+        try {
+          final body = jsonDecode(response.body);
+          _errorMessage = body['message'] ?? 'Add failed: ${response.statusCode}';
+        } catch (_) {
+          _errorMessage = 'Add failed: ${response.statusCode}';
+        }
       }
     } catch (e) {
-      _errorMessage = 'Connection error';
+      _errorMessage = 'Connection error: ${e.toString()}';
     }
     _applyFilters();
     notifyListeners();
   }
 
   Future<void> updateSubject(Subject subject) async {
+    _errorMessage = null; // Clear previous errors
     try {
       final headers = await _getHeaders();
       final response = await http
@@ -119,17 +127,22 @@ class SubjectViewModel extends ChangeNotifier {
             headers: headers,
             body: jsonEncode(subject.toJson()),
           )
-          .timeout(const Duration(seconds: 8));
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final updated = Subject.fromJson(jsonDecode(response.body));
         final index = _allSubjects.indexWhere((s) => s.id == subject.id);
         if (index != -1) _allSubjects[index] = updated;
       } else {
-        _errorMessage = 'Update failed';
+        try {
+          final body = jsonDecode(response.body);
+          _errorMessage = body['message'] ?? 'Update failed: ${response.statusCode}';
+        } catch (_) {
+          _errorMessage = 'Update failed: ${response.statusCode}';
+        }
       }
     } catch (e) {
-      _errorMessage = 'Connection error';
+      _errorMessage = 'Connection error: ${e.toString()}';
     }
     _applyFilters();
     notifyListeners();

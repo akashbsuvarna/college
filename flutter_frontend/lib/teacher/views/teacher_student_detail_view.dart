@@ -27,7 +27,7 @@ class _TeacherStudentDetailViewState extends State<TeacherStudentDetailView> {
   Future<void> _fetchAttendance() async {
     final vm = context.read<TeacherPortalViewModel>();
     try {
-      final records = await vm.fetchStudentAttendance(widget.student.studentId);
+      final records = await vm.fetchStudentAttendance(widget.student.id);
       if (mounted) {
         setState(() {
           _attendanceRecords = records;
@@ -148,12 +148,13 @@ class _TeacherStudentDetailViewState extends State<TeacherStudentDetailView> {
                   style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.textPrimary),
                 ),
                 const SizedBox(height: 8),
-                Row(
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 8,
                   children: [
                     _infoBadge(Icons.badge, widget.student.studentId),
-                    const SizedBox(width: 12),
-                    _infoBadge(Icons.menu_book, '${widget.student.academic.course} - Sem ${widget.student.academic.semester}'),
-                    const SizedBox(width: 12),
+                    _infoBadge(Icons.menu_book,
+                        '${widget.student.academic.course} - Sem ${widget.student.academic.semester}'),
                     _statusBadge(widget.student.status),
                   ],
                 ),
@@ -177,7 +178,17 @@ class _TeacherStudentDetailViewState extends State<TeacherStudentDetailView> {
         children: [
           Icon(icon, size: 14, color: AppTheme.textSecondary),
           const SizedBox(width: 6),
-          Text(text, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13, fontWeight: FontWeight.w600)),
+          Flexible(
+            child: Text(
+              text,
+              style: const TextStyle(
+                  color: AppTheme.textSecondary,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       ),
     );
@@ -348,13 +359,19 @@ class _TeacherStudentDetailViewState extends State<TeacherStudentDetailView> {
               ),
             ],
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+          child: Wrap(
+            spacing: 20,
+            runSpacing: 20,
+            alignment: WrapAlignment.spaceAround,
             children: [
-              _buildStatItem('Total Classes', totalClasses.toString(), Icons.class_),
-              _buildStatItem('Present', presentClasses.toString(), Icons.check_circle, Colors.green),
-              _buildStatItem('Absent', (totalClasses - presentClasses).toString(), Icons.cancel, Colors.red),
-              _buildStatItem('Percentage', '$percentage%', Icons.pie_chart, 
+              _buildStatItem(
+                  'Total Classes', totalClasses.toString(), Icons.class_),
+              _buildStatItem(
+                  'Present', presentClasses.toString(), Icons.check_circle, Colors.green),
+              _buildStatItem(
+                  'Absent', (totalClasses - presentClasses).toString(), Icons.cancel, Colors.red),
+              _buildStatItem(
+                  'Percentage', '$percentage%', Icons.pie_chart, 
                   double.parse(percentage) >= 75 ? Colors.green : Colors.orange),
             ],
           ),

@@ -228,10 +228,30 @@ class _LoginViewState extends State<LoginView> {
               elevation: 0,
             ),
             child: viewModel.isLoading 
-              ? const CircularProgressIndicator(color: Colors.white)
+              ? const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      width: 22,
+                      height: 22,
+                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                    ),
+                  ],
+                )
               : const Text("LOGIN", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           ),
         ),
+        if (viewModel.isLoading)
+          const Padding(
+            padding: EdgeInsets.only(top: 12),
+            child: Center(
+              child: Text(
+                'Connecting to server, please wait…',
+                style: TextStyle(color: Colors.grey, fontSize: 13),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
         if (viewModel.errorMessage != null)
           Padding(
             padding: const EdgeInsets.only(top: 15),

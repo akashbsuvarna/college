@@ -41,7 +41,7 @@ class StudentNotificationsView extends StatelessWidget {
 
             // ── List ─────────────────────────────────────────────────────
             Expanded(
-              child: vm.isLoading && vm.notifications.isEmpty
+              child: vm.isNotificationsLoading && vm.notifications.isEmpty
                   ? const Center(
                       child: CircularProgressIndicator(
                           color: AppTheme.accentCyan))

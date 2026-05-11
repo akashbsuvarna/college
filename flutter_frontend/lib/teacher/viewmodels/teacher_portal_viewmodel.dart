@@ -5,37 +5,46 @@ import '../services/teacher_service.dart';
 
 class TeacherPortalViewModel extends ChangeNotifier {
   final TeacherService _service = TeacherService();
-  
+
   TeacherModel? _currentTeacher;
   TeacherModel? get currentTeacher => _currentTeacher;
 
   List<StudentModel> _students = [];
   List<StudentModel> get students => _students;
-  
+
   List<StudentModel> _filteredStudents = [];
   List<StudentModel> get filteredStudents => _filteredStudents;
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
+  // Separate loading flags to avoid AuthWrapper loop
+  bool _sessionLoading = false;
+  bool _studentsLoading = false;
+  bool _notificationsLoading = false;
+
+  // isLoading: only session check for AuthWrapper — prevents loop when
+  // fetchStudents/fetchNotifications are called from inside the portal.
+  bool get isLoading => _sessionLoading;
+  bool get isStudentsLoading => _studentsLoading;
+  bool get isNotificationsLoading => _notificationsLoading;
 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
   Future<bool> login(String phone, String dob) async {
-    _setLoading(true);
+    _sessionLoading = true;
     _errorMessage = null;
+    notifyListeners();
 
     final result = await _service.login(phone, dob);
-    
+
     if (result['success'] == true) {
       _currentTeacher = result['teacher'];
-      _setLoading(false);
-      return true;
     } else {
       _errorMessage = result['message'];
-      _setLoading(false);
-      return false;
     }
+
+    _sessionLoading = false;
+    notifyListeners();
+    return result['success'] == true;
   }
 
   void logout() {
@@ -43,23 +52,27 @@ class TeacherPortalViewModel extends ChangeNotifier {
     _currentTeacher = null;
     _students = [];
     _filteredStudents = [];
+    _notifications = [];
     notifyListeners();
   }
 
   Future<void> fetchStudents() async {
-    _setLoading(true);
+    if (_studentsLoading) return; // guard: skip if already running
+    _studentsLoading = true;
     _errorMessage = null;
+    notifyListeners();
 
     try {
       _students = await _service.fetchStudents();
       _filteredStudents = _students;
     } catch (e) {
       _errorMessage = e.toString();
-    } finally {
-      _setLoading(false);
     }
+
+    _studentsLoading = false;
+    notifyListeners();
   }
-  
+
   void searchStudents(String query) {
     if (query.isEmpty) {
       _filteredStudents = _students;
@@ -88,20 +101,18 @@ class TeacherPortalViewModel extends ChangeNotifier {
   }
 
   Future<void> fetchNotifications() async {
-    _setLoading(true);
+    if (_notificationsLoading) return; // guard: skip if already running
+    _notificationsLoading = true;
     _errorMessage = null;
+    notifyListeners();
 
     try {
       _notifications = await _service.fetchNotifications();
     } catch (e) {
       _errorMessage = e.toString();
-    } finally {
-      _setLoading(false);
     }
-  }
 
-  void _setLoading(bool val) {
-    _isLoading = val;
+    _notificationsLoading = false;
     notifyListeners();
   }
 }

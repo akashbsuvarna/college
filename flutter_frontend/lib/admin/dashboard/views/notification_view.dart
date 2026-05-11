@@ -24,9 +24,13 @@ class NotificationView extends StatelessWidget {
                     const Text('Notifications', style: TextStyle(color: AppTheme.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
                     ElevatedButton.icon(
                       onPressed: () => _showSendNotificationDialog(context, vm),
-                      icon: const Icon(Icons.send),
-                      label: const Text('Send Notification'),
-                      style: ElevatedButton.styleFrom(backgroundColor: AppTheme.accentIndigo),
+                      icon: const Icon(Icons.send, color: Colors.white),
+                      label: const Text('Send Notification', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.accentIndigo,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      ),
                     ),
                   ],
                 ),

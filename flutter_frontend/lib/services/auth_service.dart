@@ -12,7 +12,9 @@ class AuthService {
         Uri.parse("$baseUrl/auth/login"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"email": email, "password": password}),
-      );
+      ).timeout(const Duration(seconds: 60), onTimeout: () {
+        throw Exception("Request timed out. Server is warming up, please try again.");
+      });
 
       final data = jsonDecode(response.body);
       if (response.statusCode == 200) {

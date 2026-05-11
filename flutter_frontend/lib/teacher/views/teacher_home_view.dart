@@ -210,7 +210,7 @@ class _TeacherHomeViewState extends State<TeacherHomeView> {
 
           // Student List
           Expanded(
-            child: vm.isLoading
+            child: vm.isStudentsLoading
                 ? const Center(child: CircularProgressIndicator(color: Color(0xFF10B981)))
                 : vm.errorMessage != null
                     ? Center(child: Text(vm.errorMessage!, style: const TextStyle(color: Colors.red)))

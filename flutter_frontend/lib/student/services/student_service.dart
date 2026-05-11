@@ -16,7 +16,7 @@ class StudentService {
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({'phone': phone, 'password': password}),
           )
-          .timeout(const Duration(seconds: 8));
+          .timeout(const Duration(seconds: 30));
 
       final data = jsonDecode(response.body);
       debugPrint('Student Login Status: ${response.statusCode}');
@@ -41,7 +41,7 @@ class StudentService {
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode(studentData),
           )
-          .timeout(const Duration(seconds: 8));
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         return {'success': true};
@@ -86,7 +86,7 @@ class StudentService {
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({'token': qrToken, 'studentId': studentId}),
           )
-          .timeout(const Duration(seconds: 8));
+          .timeout(const Duration(seconds: 30));
 
       final data = jsonDecode(response.body);
       if (response.statusCode == 200 && data['success'] == true) {
@@ -121,7 +121,7 @@ class StudentService {
               'Authorization': 'Bearer $token',
             },
           )
-          .timeout(const Duration(seconds: 8));
+          .timeout(const Duration(seconds: 30));
     } catch (e) {
       return null;
     }

@@ -466,11 +466,19 @@ class _StudentRegistrationViewState extends State<StudentRegistrationView> {
         barrierDismissible: false,
         builder: (ctx) => AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: const Row(
+          insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+          title: Row(
             children: [
-              Icon(Icons.check_circle_rounded, color: Colors.green, size: 28),
-              SizedBox(width: 10),
-              Text('Registration Successful'),
+              const Icon(Icons.check_circle_rounded, color: Colors.green, size: 28),
+              const SizedBox(width: 10),
+              const Expanded(
+                child: Text(
+                  'Registration Successful',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                  overflow: TextOverflow.visible,
+                  softWrap: true,
+                ),
+              ),
             ],
           ),
           content: const Text(

@@ -71,7 +71,7 @@ class AuthWrapper extends StatelessWidget {
     final studentViewModel = context.watch<StudentPortalViewModel>();
     final teacherViewModel = context.watch<TeacherPortalViewModel>();
 
-    if (authViewModel.isLoading || studentViewModel.isLoading || teacherViewModel.isLoading) {
+    if (authViewModel.isLoading || studentViewModel.isSessionLoading || teacherViewModel.isLoading) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );

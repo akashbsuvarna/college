@@ -11,7 +11,7 @@ class StudentProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<StudentPortalViewModel>(
       builder: (ctx, vm, _) {
-        if (vm.isLoading && vm.student == null) {
+        if (vm.isProfileLoading && vm.student == null) {
           return const Center(
               child:
                   CircularProgressIndicator(color: AppTheme.accentCyan));
@@ -28,13 +28,16 @@ class StudentProfileView extends StatelessWidget {
         return RefreshIndicator(
           onRefresh: vm.loadProfile,
           color: AppTheme.accentCyan,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(20),
-            child: Column(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final isMobile = constraints.maxWidth < 600;
+              return SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(20),
+                child: Column(
               children: [
                 // ── Header card ──────────────────────────────────────────
-                _buildHeader(s),
+                _buildHeader(s, isMobile),
                 const SizedBox(height: 20),
 
                 // ── Personal info ────────────────────────────────────────
@@ -58,7 +61,35 @@ class StudentProfileView extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // ── Parent info ──────────────────────────────────────────
-                Row(
+                if (isMobile) ...[
+                  _cardSection(
+                    title: "Father's Details",
+                    icon: Icons.man_rounded,
+                    color: AppTheme.accentCyan,
+                    children: [
+                      _infoRow(Icons.person_rounded, 'Name',
+                          s.father.name, AppTheme.accentCyan),
+                      _infoRow(Icons.work_rounded, 'Occupation',
+                          s.father.occupation, AppTheme.accentOrange),
+                      _infoRow(Icons.phone_rounded, 'Mobile',
+                          s.father.mobile, AppTheme.accentGreen),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  _cardSection(
+                    title: "Mother's Details",
+                    icon: Icons.woman_rounded,
+                    color: AppTheme.accentPurple,
+                    children: [
+                      _infoRow(Icons.person_rounded, 'Name',
+                          s.mother.name, AppTheme.accentPurple),
+                      _infoRow(Icons.work_rounded, 'Occupation',
+                          s.mother.occupation, AppTheme.accentOrange),
+                      _infoRow(Icons.phone_rounded, 'Mobile',
+                          s.mother.mobile, AppTheme.accentGreen),
+                    ],
+                  ),
+                ] else Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
@@ -97,7 +128,35 @@ class StudentProfileView extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // ── Education ────────────────────────────────────────────
-                Row(
+                if (isMobile) ...[
+                  _cardSection(
+                    title: 'SSLC / 10th',
+                    icon: Icons.menu_book_rounded,
+                    color: AppTheme.accentGreen,
+                    children: [
+                      _infoRow(Icons.school_rounded, 'School',
+                          s.sslc.school, AppTheme.accentGreen),
+                      _infoRow(Icons.percent_rounded, 'Percentage',
+                          '${s.sslc.percentage}%', AppTheme.accentIndigo),
+                      _infoRow(Icons.manage_accounts_rounded, 'Board',
+                          s.sslc.board, AppTheme.accentOrange),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  _cardSection(
+                    title: 'PUC / 12th',
+                    icon: Icons.menu_book_rounded,
+                    color: AppTheme.accentOrange,
+                    children: [
+                      _infoRow(Icons.account_balance_rounded, 'College',
+                          s.puc.college, AppTheme.accentOrange),
+                      _infoRow(Icons.percent_rounded, 'Percentage',
+                          '${s.puc.percentage}%', AppTheme.accentIndigo),
+                      _infoRow(Icons.subject_rounded, 'Course',
+                          s.puc.course, AppTheme.accentCyan),
+                    ],
+                  ),
+                ] else Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
@@ -141,6 +200,8 @@ class StudentProfileView extends StatelessWidget {
                 ),
               ],
             ),
+          );
+            },
           ),
         );
       },
@@ -148,10 +209,68 @@ class StudentProfileView extends StatelessWidget {
   }
 
   // ── Header ─────────────────────────────────────────────────────────────────
-  Widget _buildHeader(StudentPortalModel student) {
+  Widget _buildHeader(StudentPortalModel student, bool isMobile) {
     final initial = student.fullName.isNotEmpty ? student.fullName[0] : '?';
+    
+    final avatar = Container(
+      width: isMobile ? 64 : 72,
+      height: isMobile ? 64 : 72,
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(isMobile ? 14 : 18),
+      ),
+      child: Center(
+        child: Text(
+          initial.toUpperCase(),
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w800,
+              fontSize: isMobile ? 24 : 28),
+        ),
+      ),
+    );
+
+    final details = Column(
+      crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      children: [
+        Text(
+          student.fullName,
+          textAlign: isMobile ? TextAlign.center : TextAlign.start,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w800,
+            fontSize: isMobile ? 20 : 22,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          student.email,
+          textAlign: isMobile ? TextAlign.center : TextAlign.start,
+          style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.8),
+              fontSize: isMobile ? 12 : 13),
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
+          children: [
+            _headerChip(Icons.book_rounded, student.academic.course),
+            _headerChip(Icons.calendar_month_rounded,
+                'Sem ${student.academic.semester}'),
+            _headerChip(
+              Icons.circle,
+              student.status == 'active' ? 'Active' : student.status,
+            ),
+          ],
+        ),
+      ],
+    );
+
     return Container(
-      padding: const EdgeInsets.all(24),
+      width: double.infinity,
+      padding: EdgeInsets.all(isMobile ? 20 : 24),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFF0EA5E9), Color(0xFF6366F1)],
@@ -160,65 +279,21 @@ class StudentProfileView extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(18),
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 72,
-            height: 72,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: Center(
-              child: Text(
-                initial.toUpperCase(),
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 28),
-              ),
-            ),
+      child: isMobile 
+        ? Column(
+            children: [
+              avatar,
+              const SizedBox(height: 16),
+              details,
+            ],
+          )
+        : Row(
+            children: [
+              avatar,
+              const SizedBox(width: 20),
+              Expanded(child: details),
+            ],
           ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  student.fullName,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 22,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  student.email,
-                  style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.8),
-                      fontSize: 13),
-                ),
-                const SizedBox(height: 10),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    _headerChip(
-                        Icons.book_rounded, student.academic.course),
-                    _headerChip(Icons.calendar_month_rounded,
-                        'Sem ${student.academic.semester}'),
-                    _headerChip(
-                      Icons.circle,
-                      student.status == 'active' ? 'Active' : student.status,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -234,11 +309,17 @@ class StudentProfileView extends StatelessWidget {
         children: [
           Icon(icon, size: 12, color: Colors.white),
           const SizedBox(width: 5),
-          Text(text,
+          Flexible(
+            child: Text(
+              text,
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 11,
-                  fontWeight: FontWeight.w600)),
+                  fontWeight: FontWeight.w600),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       ),
     );
@@ -273,11 +354,15 @@ class StudentProfileView extends StatelessWidget {
                 child: Icon(icon, color: color, size: 16),
               ),
               const SizedBox(width: 10),
-              Text(title,
-                  style: const TextStyle(
-                      color: AppTheme.textPrimary,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14)),
+              Expanded(
+                child: Text(title,
+                    style: const TextStyle(
+                        color: AppTheme.textPrimary,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis),
+              ),
             ],
           ),
           const SizedBox(height: 16),

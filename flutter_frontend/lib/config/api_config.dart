@@ -7,7 +7,7 @@ class ApiConfig {
 
   static String get baseUrl {
     // Production URL
-    return "https://backend-liard-tau-16.vercel.app/api";
+    return "https://college-sys-backend.vercel.app/api";
   }
 
   static const String adminPath = "/admin";

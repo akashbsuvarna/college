@@ -15,125 +15,171 @@ class StudentAttendanceView extends StatelessWidget {
     return Consumer<StudentPortalViewModel>(
       builder: (ctx, vm, _) {
         final s = vm.student;
-        return Column(
-          children: [
-            // ── My QR Section ───────────────────────────────────────────
-            if (s != null)
-            Container(
-              margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF0EA5E9), Color(0xFF6366F1)],
-                ),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF0EA5E9).withValues(alpha: 0.3),
-                    blurRadius: 15,
-                    offset: const Offset(0, 8),
-                  )
-                ],
-              ),
-              child: Row(
-                children: [
-                   Container(
-                    padding: const EdgeInsets.all(12),
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final isMobile = constraints.maxWidth < 600;
+            return Column(
+              children: [
+                // ── My QR Section ───────────────────────────────────────────
+                if (s != null)
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: QrImageView(
-                      data: s.id,
-                      version: QrVersions.auto,
-                      size: 100,
-                      gapless: false,
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  const Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'MY ATTENDANCE QR',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 1.2,
-                            fontSize: 14,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Show this QR to your teacher to mark your attendance.',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                            height: 1.4,
-                          ),
-                        ),
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF0EA5E9), Color(0xFF6366F1)],
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF0EA5E9).withValues(alpha: 0.3),
+                          blurRadius: 15,
+                          offset: const Offset(0, 8),
+                        )
                       ],
                     ),
+                    child: isMobile
+                        ? Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: QrImageView(
+                                  data: s.id,
+                                  version: QrVersions.auto,
+                                  size: 100,
+                                  gapless: false,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              const Text(
+                                'MY ATTENDANCE QR',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 1.2,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              const Text(
+                                'Show this QR to your teacher to mark your attendance.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  height: 1.4,
+                                ),
+                              ),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: QrImageView(
+                                  data: s.id,
+                                  version: QrVersions.auto,
+                                  size: 100,
+                                  gapless: false,
+                                ),
+                              ),
+                              const SizedBox(width: 20),
+                              const Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'MY ATTENDANCE QR',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w900,
+                                        letterSpacing: 1.2,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      'Show this QR to your teacher to mark your attendance.',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 13,
+                                        height: 1.4,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                   ),
-                ],
-              ),
-            ),
 
-            // ── Toolbar ──────────────────────────────────────────────────
-            Container(
-              padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
-              child: Row(
-                children: [
-                   const Icon(Icons.history_rounded, color: AppTheme.accentCyan, size: 20),
-                   const SizedBox(width: 8),
-                   Expanded(
-                    child: Text(
-                      'Attendance History (${vm.attendance.length})',
-                      style: const TextStyle(
-                        color: AppTheme.textPrimary,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
+                // ── Toolbar ──────────────────────────────────────────────────
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.history_rounded,
+                          color: AppTheme.accentCyan, size: 20),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Attendance History (${vm.attendance.length})',
+                          style: const TextStyle(
+                            color: AppTheme.textPrimary,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
-                    ),
+                      IconButton(
+                        onPressed: vm.loadAttendance,
+                        icon: const Icon(Icons.refresh_rounded,
+                            color: AppTheme.textSecondary, size: 22),
+                      ),
+                    ],
                   ),
-                  IconButton(
-                    onPressed: vm.loadAttendance,
-                    icon: const Icon(Icons.refresh_rounded,
-                        color: AppTheme.textSecondary, size: 22),
-                  ),
-                ],
-              ),
-            ),
+                ),
 
-            // ── List ─────────────────────────────────────────────────────
-            Expanded(
-              child: vm.isLoading && vm.attendance.isEmpty
-                  ? const Center(
-                      child: CircularProgressIndicator(
-                          color: AppTheme.accentCyan))
-                  : RefreshIndicator(
-                      onRefresh: vm.loadAttendance,
-                      color: AppTheme.accentCyan,
-                      child: vm.attendance.isEmpty
-                          ? Stack(
-                              children: [
-                                ListView(
-                                    physics: const AlwaysScrollableScrollPhysics()),
-                                _buildEmpty(),
-                              ],
-                            )
-                          : ListView.separated(
-                              padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
-                              itemCount: vm.attendance.length,
-                              separatorBuilder: (_, s) =>
-                                  const SizedBox(height: 10),
-                              itemBuilder: (ctx, i) =>
-                                  _AttendanceCard(record: vm.attendance[i]),
-                            ),
-                    ),
-            ),
-          ],
+                // ── List ─────────────────────────────────────────────────────
+                Expanded(
+                  child: vm.isAttendanceLoading && vm.attendance.isEmpty
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                              color: AppTheme.accentCyan))
+                      : RefreshIndicator(
+                          onRefresh: vm.loadAttendance,
+                          color: AppTheme.accentCyan,
+                          child: vm.attendance.isEmpty
+                              ? Stack(
+                                  children: [
+                                    ListView(
+                                        physics:
+                                            const AlwaysScrollableScrollPhysics()),
+                                    _buildEmpty(),
+                                  ],
+                                )
+                              : ListView.separated(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 4, 20, 20),
+                                  itemCount: vm.attendance.length,
+                                  separatorBuilder: (_, s) =>
+                                      const SizedBox(height: 10),
+                                  itemBuilder: (ctx, i) =>
+                                      _AttendanceCard(record: vm.attendance[i]),
+                                ),
+                        ),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -248,10 +294,14 @@ class _AttendanceCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                     ],
-                    Text(
-                      _formatDate(record.date),
-                      style: const TextStyle(
-                          color: AppTheme.textMuted, fontSize: 11),
+                    Expanded(
+                      child: Text(
+                        _formatDate(record.date),
+                        style: const TextStyle(
+                            color: AppTheme.textMuted, fontSize: 11),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
