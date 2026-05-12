@@ -47,11 +47,10 @@ class _AdminSidebarState extends State<AdminSidebar>
     SidebarItem(icon: Icons.dashboard_rounded, label: 'Dashboard', index: 0),
     SidebarItem(icon: Icons.school_rounded, label: 'Teachers', index: 1),
     SidebarItem(icon: Icons.person_rounded, label: 'Students', index: 2),
-    SidebarItem(icon: Icons.book_rounded, label: 'Courses', index: 4),
-    SidebarItem(icon: Icons.subject_rounded, label: 'Subjects', index: 5),
-    SidebarItem(icon: Icons.qr_code_scanner_rounded, label: 'Attendance', index: 6),
-    SidebarItem(icon: Icons.notifications_rounded, label: 'Notifications', index: 7),
-    SidebarItem(icon: Icons.settings_rounded, label: 'Settings', index: 3),
+    SidebarItem(icon: Icons.book_rounded, label: 'Courses', index: 3),
+    SidebarItem(icon: Icons.subject_rounded, label: 'Subjects', index: 4),
+    SidebarItem(icon: Icons.qr_code_scanner_rounded, label: 'Attendance', index: 5),
+    SidebarItem(icon: Icons.notifications_rounded, label: 'Notifications', index: 6),
   ];
 
   @override

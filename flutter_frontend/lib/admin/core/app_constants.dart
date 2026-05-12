@@ -15,5 +15,4 @@ class AppConstants {
   static const String menuDashboard = 'Dashboard';
   static const String menuTeachers = 'Teachers';
   static const String menuStudents = 'Students';
-  static const String menuSettings = 'Settings';
 }

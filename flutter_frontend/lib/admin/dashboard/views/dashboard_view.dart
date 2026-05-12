@@ -26,7 +26,6 @@ class _DashboardViewState extends State<DashboardView> {
     'Dashboard',
     'Teachers',
     'Students',
-    'Settings',
     'Courses',
     'Subjects',
     'Attendance',
@@ -133,13 +132,13 @@ class _DashboardViewState extends State<DashboardView> {
         return const TeacherListView();
       case 2:
         return const StudentListView();
-      case 4:
+      case 3:
         return const CourseListView();
-      case 5:
+      case 4:
         return const SubjectListView();
-      case 6:
+      case 5:
         return const AttendanceView();
-      case 7:
+      case 6:
         return const NotificationView();
       default:
         return _ComingSoon(title: _pageTitles[_selectedIndex]);
@@ -208,22 +207,71 @@ class _DashboardContent extends StatelessWidget {
 
   Widget _buildWelcomeBanner(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFFE9E6E8), Color(0xFF0D1B35)],
+          colors: [Color(0xFF1A237E), Color(0xFF4A148C), Color(0xFF0D47A1)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppTheme.dividerColor),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF3949AB).withValues(alpha: 0.4),
+            blurRadius: 24,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text('Welcome Back, Admin! 👋', style: TextStyle(color: Color(0xFF040914), fontSize: 22, fontWeight: FontWeight.w700)),
-          SizedBox(height: 6),
-          Text('Focusing on your Teachers and Students management today.', style: TextStyle(color: AppTheme.textSecondary, fontSize: 14)),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Welcome Back, Admin! 👋',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Here\'s an overview of your college management system today.',
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.75),
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                  ),
+                  child: const Text(
+                    '🎓  College ERP System',
+                    style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 16),
+          Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+            ),
+            child: const Icon(Icons.admin_panel_settings_rounded, color: Colors.white, size: 40),
+          ),
         ],
       ),
     );
@@ -324,33 +372,115 @@ class _StatCardData {
   });
 }
 
-class _StatCard extends StatelessWidget {
+class _StatCard extends StatefulWidget {
   final _StatCardData data;
   const _StatCard({required this.data});
 
   @override
+  State<_StatCard> createState() => _StatCardState();
+}
+
+class _StatCardState extends State<_StatCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _scale;
+  bool _hovered = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+    _scale = Tween<double>(begin: 1.0, end: 1.03).animate(
+      CurvedAnimation(parent: _ctrl, curve: Curves.easeOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceCard,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.dividerColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(color: data.gradient[0].withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
-            child: Icon(data.icon, color: data.gradient[0], size: 24),
+    final d = widget.data;
+    return MouseRegion(
+      onEnter: (_) { _ctrl.forward(); setState(() => _hovered = true); },
+      onExit: (_) { _ctrl.reverse(); setState(() => _hovered = false); },
+      child: AnimatedBuilder(
+        animation: _scale,
+        builder: (_, child) => Transform.scale(scale: _scale.value, child: child),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.all(22),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                d.gradient[0].withValues(alpha: _hovered ? 0.22 : 0.12),
+                d.gradient[1].withValues(alpha: _hovered ? 0.14 : 0.06),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(
+              color: d.gradient[0].withValues(alpha: _hovered ? 0.5 : 0.25),
+            ),
+            boxShadow: _hovered
+                ? [
+                    BoxShadow(
+                      color: d.gradient[0].withValues(alpha: 0.25),
+                      blurRadius: 20,
+                      offset: const Offset(0, 6),
+                    )
+                  ]
+                : [],
           ),
-          const SizedBox(height: 16),
-          Text(data.value, style: const TextStyle(color: AppTheme.textPrimary, fontSize: 24, fontWeight: FontWeight.w800)),
-          Text(data.title, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 14)),
-          const SizedBox(height: 4),
-          Text(data.subtitle, style: const TextStyle(color: AppTheme.textMuted, fontSize: 12)),
-        ],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: d.gradient[0].withValues(alpha: 0.18),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(d.icon, color: d.gradient[0], size: 22),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: d.gradient[0].withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      d.subtitle,
+                      style: TextStyle(color: d.gradient[0], fontSize: 10, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 18),
+              Text(
+                d.value,
+                style: const TextStyle(
+                  color: AppTheme.textPrimary,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -1,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(d.title, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
+            ],
+          ),
+        ),
       ),
     );
   }
