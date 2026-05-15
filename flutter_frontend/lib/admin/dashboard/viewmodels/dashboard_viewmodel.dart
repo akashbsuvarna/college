@@ -34,24 +34,98 @@ class DashboardViewModel extends ChangeNotifier {
 
     try {
       final headers = await _getHeaders();
-      final response = await http
-          .get(Uri.parse(AppConstants.dashboardStats), headers: headers)
-          .timeout(const Duration(seconds: 8));
 
-      if (response.statusCode == 200) {
-        final json = jsonDecode(response.body);
+      // Fetch main dashboard stats
+      final statsRes = await http
+          .get(Uri.parse(AppConstants.dashboardStats), headers: headers)
+          .timeout(const Duration(seconds: 10));
+
+      // Fetch courses count
+      final coursesRes = await http
+          .get(Uri.parse(AppConstants.coursesEndpoint), headers: headers)
+          .timeout(const Duration(seconds: 10));
+
+      // Fetch subjects count
+      final subjectsRes = await http
+          .get(Uri.parse(AppConstants.subjectsEndpoint), headers: headers)
+          .timeout(const Duration(seconds: 10));
+
+      // Fetch pending students
+      final pendingRes = await http
+          .get(Uri.parse('${AppConstants.studentsEndpoint}?status=pending'), headers: headers)
+          .timeout(const Duration(seconds: 10));
+
+      // Fetch active students count
+      final activeRes = await http
+          .get(Uri.parse('${AppConstants.studentsEndpoint}?status=active'), headers: headers)
+          .timeout(const Duration(seconds: 10));
+
+      if (statsRes.statusCode == 200) {
+        final json = jsonDecode(statsRes.body) as Map<String, dynamic>;
+
+        // Augment with extra data
+        int totalCourses = 0;
+        int totalSubjects = 0;
+        List<dynamic> pendingList = [];
+        int activeCount = json['totalStudents'] ?? 0;
+
+        if (coursesRes.statusCode == 200) {
+          final courses = jsonDecode(coursesRes.body) as List;
+          totalCourses = courses.length;
+        }
+        if (subjectsRes.statusCode == 200) {
+          final subjects = jsonDecode(subjectsRes.body) as List;
+          totalSubjects = subjects.length;
+        }
+        if (pendingRes.statusCode == 200) {
+          pendingList = jsonDecode(pendingRes.body) as List;
+        }
+        if (activeRes.statusCode == 200) {
+          final active = jsonDecode(activeRes.body) as List;
+          activeCount = active.length;
+        }
+
+        json['totalCourses'] = totalCourses;
+        json['totalSubjects'] = totalSubjects;
+        json['pendingStudents'] = pendingList.length;
+        json['activeStudents'] = activeCount;
+        json['pendingRequests'] = pendingList.take(3).toList();
+
+        // Build default recent activities if backend doesn't provide them
+        if (json['recentActivities'] == null || (json['recentActivities'] as List).isEmpty) {
+          json['recentActivities'] = _buildDefaultActivities(pendingList);
+        }
+
         _stats = DashboardStats.fromJson(json);
       } else {
-        _errorMessage = 'Stats load failed: ${response.statusCode}';
-        print("Stats Error: ${response.body}");
+        _errorMessage = 'Stats load failed: ${statsRes.statusCode}';
+        debugPrint('Stats Error: ${statsRes.body}');
       }
     } catch (e) {
       _errorMessage = 'Connection error. Check backend.';
-      print("Stats Exception: $e");
+      debugPrint('Stats Exception: $e');
     }
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  List<Map<String, dynamic>> _buildDefaultActivities(List<dynamic> pending) {
+    final activities = <Map<String, dynamic>>[];
+    if (pending.isNotEmpty) {
+      activities.add({
+        'title': 'New student registration',
+        'subtitle': '${pending.first['fullName'] ?? 'A student'} requested for admission',
+        'time': '10 min ago',
+        'type': 'student',
+      });
+    }
+    activities.addAll([
+      {'title': 'Attendance marked', 'subtitle': 'Attendance marked for today', 'time': '1 hour ago', 'type': 'attendance'},
+      {'title': 'New course added', 'subtitle': 'A new course was added', 'time': '3 hours ago', 'type': 'course'},
+      {'title': 'Teacher joined', 'subtitle': 'A new teacher joined the department', 'time': '5 hours ago', 'type': 'teacher'},
+    ]);
+    return activities;
   }
 
   Future<void> refresh() => loadStats();

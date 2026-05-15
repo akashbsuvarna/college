@@ -10,6 +10,7 @@ import '../../course/views/course_list_view.dart';
 import '../../subject/views/subject_list_view.dart';
 import 'attendance_view.dart';
 import 'notification_view.dart';
+import 'dashboard_widgets.dart';
 
 class DashboardView extends StatefulWidget {
   const DashboardView({super.key});
@@ -35,7 +36,7 @@ class _DashboardViewState extends State<DashboardView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.surfaceDark,
+      backgroundColor: const Color(0xFFF8F9FC),
       body: Row(
         children: [
           AdminSidebar(
@@ -49,9 +50,7 @@ class _DashboardViewState extends State<DashboardView> {
             child: Column(
               children: [
                 _buildTopBar(),
-                Expanded(
-                  child: _buildCurrentPage(),
-                ),
+                Expanded(child: _buildCurrentPage()),
               ],
             ),
           ),
@@ -65,29 +64,20 @@ class _DashboardViewState extends State<DashboardView> {
       height: 64,
       padding: const EdgeInsets.symmetric(horizontal: 24),
       decoration: const BoxDecoration(
-        color: AppTheme.surfaceDark,
-        border: Border(
-          bottom: BorderSide(color: AppTheme.dividerColor, width: 1),
-        ),
+        color: Colors.white,
+        border: Border(bottom: BorderSide(color: AppTheme.dividerColor, width: 1)),
       ),
       child: Row(
         children: [
-          Text(
-            _pageTitles[_selectedIndex],
-            style: const TextStyle(
-              color: AppTheme.textPrimary,
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
+          Text(_pageTitles[_selectedIndex],
+              style: const TextStyle(color: AppTheme.textPrimary, fontSize: 20, fontWeight: FontWeight.w700)),
           const Spacer(),
-          // Search bar
           Flexible(
             child: Container(
               constraints: const BoxConstraints(maxWidth: 240),
               height: 38,
               decoration: BoxDecoration(
-                color: AppTheme.surfaceCard,
+                color: const Color(0xFFF3F4F6),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: AppTheme.dividerColor),
               ),
@@ -96,8 +86,7 @@ class _DashboardViewState extends State<DashboardView> {
                 decoration: InputDecoration(
                   hintText: 'Search...',
                   hintStyle: TextStyle(color: AppTheme.textMuted, fontSize: 13),
-                  prefixIcon: Icon(Icons.search_rounded,
-                      color: AppTheme.textMuted, size: 18),
+                  prefixIcon: Icon(Icons.search_rounded, color: AppTheme.textMuted, size: 18),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(vertical: 10),
                 ),
@@ -107,14 +96,9 @@ class _DashboardViewState extends State<DashboardView> {
           const SizedBox(width: 16),
           CircleAvatar(
             radius: 18,
-            backgroundColor: AppTheme.accentIndigo.withValues(alpha: 0.2),
-            child: const Text(
-              'A',
-              style: TextStyle(
-                  color: AppTheme.accentIndigo,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 14),
-            ),
+            backgroundColor: AppTheme.accentIndigo.withValues(alpha: 0.15),
+            child: const Text('A',
+                style: TextStyle(color: AppTheme.accentIndigo, fontWeight: FontWeight.w700, fontSize: 14)),
           ),
         ],
       ),
@@ -126,7 +110,7 @@ class _DashboardViewState extends State<DashboardView> {
       case 0:
         return ChangeNotifierProvider(
           create: (_) => DashboardViewModel(),
-          child: const _DashboardContent(),
+          child: _DashboardContent(onTabChange: (i) => setState(() => _selectedIndex = i)),
         );
       case 1:
         return const TeacherListView();
@@ -146,8 +130,12 @@ class _DashboardViewState extends State<DashboardView> {
   }
 }
 
+// ═══════════════════════════════════════════
+// DASHBOARD CONTENT
+// ═══════════════════════════════════════════
 class _DashboardContent extends StatelessWidget {
-  const _DashboardContent();
+  final ValueChanged<int> onTabChange;
+  const _DashboardContent({required this.onTabChange});
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +152,8 @@ class _DashboardContent extends StatelessWidget {
               children: [
                 const Icon(Icons.error_outline_rounded, color: AppTheme.accentRed, size: 48),
                 const SizedBox(height: 12),
-                Text(vm.errorMessage ?? 'Failed to load data', style: const TextStyle(color: AppTheme.textSecondary)),
+                Text(vm.errorMessage ?? 'Failed to load data',
+                    style: const TextStyle(color: AppTheme.textSecondary)),
                 const SizedBox(height: 16),
                 ElevatedButton.icon(
                   onPressed: vm.refresh,
@@ -185,18 +174,19 @@ class _DashboardContent extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildWelcomeBanner(context),
-                const SizedBox(height: 24),
-                _buildStatCards(stats),
-                const SizedBox(height: 24),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(flex: 3, child: _buildActivityFeed(stats)),
-                    const SizedBox(width: 20),
-                    Expanded(flex: 2, child: _buildQuickStats(stats)),
-                  ],
+                _welcomeRow(),
+                const SizedBox(height: 20),
+                _statCardsRow(stats),
+                const SizedBox(height: 20),
+                _middleRow(stats),
+                const SizedBox(height: 16),
+                AttendanceSummaryRow(
+                  avgRate: stats.attendanceRate,
+                  presentCount: stats.presentCount,
+                  absentCount: stats.absentCount,
                 ),
+                const SizedBox(height: 20),
+                _bottomRow(stats, () => onTabChange(2)),
               ],
             ),
           ),
@@ -205,336 +195,265 @@ class _DashboardContent extends StatelessWidget {
     );
   }
 
-  Widget _buildWelcomeBanner(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(28),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF1A237E), Color(0xFF4A148C), Color(0xFF0D47A1)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+  // ── Welcome row ──
+  Widget _welcomeRow() {
+    final now = DateTime.now();
+    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    final dateStr = '${months[now.month - 1]} ${now.day}, ${now.year}';
+    final dayStr = weekdays[now.weekday % 7];
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Welcome back, Admin User!',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: AppTheme.textPrimary)),
+            const SizedBox(height: 4),
+            Text("Here's what's happening in your college today.",
+                style: TextStyle(fontSize: 14, color: AppTheme.textSecondary)),
+          ],
         ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF3949AB).withValues(alpha: 0.4),
-            blurRadius: 24,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        Row(
+          children: [
+            const Icon(Icons.calendar_today_rounded, size: 16, color: AppTheme.textMuted),
+            const SizedBox(width: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const Text(
-                  'Welcome Back, Admin! 👋',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.5,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Here\'s an overview of your college management system today.',
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.75),
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
-                  ),
-                  child: const Text(
-                    '🎓  College ERP System',
-                    style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
-                  ),
-                ),
+                Text(dateStr, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppTheme.textPrimary)),
+                Text(dayStr, style: const TextStyle(fontSize: 12, color: AppTheme.textMuted)),
               ],
             ),
-          ),
-          const SizedBox(width: 16),
-          Container(
-            padding: const EdgeInsets.all(18),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
-            ),
-            child: const Icon(Icons.admin_panel_settings_rounded, color: Colors.white, size: 40),
-          ),
-        ],
-      ),
+          ],
+        ),
+      ],
     );
   }
 
-  Widget _buildStatCards(DashboardStats stats) {
-    final cards = [
-      _StatCardData(
-        title: 'Total Teachers',
-        value: stats.totalTeachers.toString(),
-        subtitle: '${stats.activeTeachers} active',
-        icon: Icons.school_rounded,
-        gradient: AppTheme.gradientBlue,
-      ),
-      _StatCardData(
-        title: 'Total Students',
-        value: stats.totalStudents.toString(),
-        subtitle: '${stats.activeStudents} active',
-        icon: Icons.people_alt_rounded,
-        gradient: AppTheme.gradientPurple,
-      ),
-      _StatCardData(
-        title: 'Attendance Rate',
-        value: '${stats.attendanceRate.toStringAsFixed(1)}%',
-        subtitle: 'Avg. this week',
-        icon: Icons.task_alt_rounded,
-        gradient: AppTheme.gradientOrange,
-      ),
-    ];
-
-    return Wrap(
-      spacing: 16,
-      runSpacing: 16,
-      children: cards.map((c) => SizedBox(width: 280, child: _StatCard(data: c))).toList(),
-    );
-  }
-
-  Widget _buildActivityFeed(DashboardStats stats) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceCard,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.dividerColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  // ── 4 Stat cards ──
+  Widget _statCardsRow(DashboardStats s) {
+    return LayoutBuilder(builder: (ctx, constraints) {
+      return Wrap(
+        spacing: 16,
+        runSpacing: 16,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(20),
-            child: Text('Recent Activity', style: TextStyle(color: AppTheme.textPrimary, fontWeight: FontWeight.w700, fontSize: 16)),
+          SizedBox(
+            width: (constraints.maxWidth - 48) / 4,
+            child: DashboardStatCard(
+              title: 'Total Students', value: '${s.totalStudents}',
+              change: '↑ ${s.pendingStudents} pending',
+              icon: Icons.people_alt_rounded,
+              color: const Color(0xFF4F46E5), bgColor: const Color(0xFFEEF2FF),
+            ),
           ),
-          const Divider(height: 1, color: AppTheme.dividerColor),
-          ...stats.recentActivities.map((a) => _ActivityTile(activity: a)),
-          const SizedBox(height: 8),
+          SizedBox(
+            width: (constraints.maxWidth - 48) / 4,
+            child: DashboardStatCard(
+              title: 'Total Teachers', value: '${s.totalTeachers}',
+              change: '↑ ${s.activeTeachers} active',
+              icon: Icons.school_rounded,
+              color: const Color(0xFF0891B2), bgColor: const Color(0xFFECFEFF),
+            ),
+          ),
+          SizedBox(
+            width: (constraints.maxWidth - 48) / 4,
+            child: DashboardStatCard(
+              title: 'Total Courses', value: '${s.totalCourses}',
+              change: '↑ courses',
+              icon: Icons.book_rounded,
+              color: const Color(0xFFF59E0B), bgColor: const Color(0xFFFFFBEB),
+            ),
+          ),
+          SizedBox(
+            width: (constraints.maxWidth - 48) / 4,
+            child: DashboardStatCard(
+              title: 'Total Subjects', value: '${s.totalSubjects}',
+              change: '↑ subjects',
+              icon: Icons.layers_rounded,
+              color: const Color(0xFFEF4444), bgColor: const Color(0xFFFEF2F2),
+            ),
+          ),
         ],
-      ),
+      );
+    });
+  }
+
+  // ── Middle row: Chart + Recent Activities ──
+  Widget _middleRow(DashboardStats s) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(flex: 3, child: AttendanceLineChart(data: s.weeklyAttendance)),
+        const SizedBox(width: 16),
+        Expanded(flex: 2, child: _recentActivities(s)),
+      ],
     );
   }
 
-  Widget _buildQuickStats(DashboardStats stats) {
+  // ── Recent Activities card ──
+  Widget _recentActivities(DashboardStats s) {
+    final iconMap = {
+      ActivityType.student: (Icons.person_add_rounded, const Color(0xFF4F46E5), const Color(0xFFEEF2FF)),
+      ActivityType.attendance: (Icons.check_circle_rounded, const Color(0xFFEF4444), const Color(0xFFFEF2F2)),
+      ActivityType.course: (Icons.book_rounded, const Color(0xFFF59E0B), const Color(0xFFFFFBEB)),
+      ActivityType.teacher: (Icons.school_rounded, const Color(0xFF8B5CF6), const Color(0xFFF5F3FF)),
+      ActivityType.report: (Icons.description_rounded, const Color(0xFF6B7280), const Color(0xFFF3F4F6)),
+    };
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppTheme.surfaceCard,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppTheme.dividerColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Quick Overview', style: TextStyle(color: AppTheme.textPrimary, fontWeight: FontWeight.w700, fontSize: 16)),
-          const SizedBox(height: 20),
-          _MiniBarChart(label: 'Active Teachers', value: stats.activeTeachers.toDouble(), max: stats.totalTeachers.toDouble(), color: AppTheme.accentIndigo),
-          const SizedBox(height: 14),
-          _MiniBarChart(label: 'Active Students', value: stats.activeStudents.toDouble(), max: stats.totalStudents.toDouble(), color: AppTheme.accentPurple),
-          const SizedBox(height: 14),
-          _MiniBarChart(label: 'Attendance Rate', value: stats.attendanceRate, max: 100, color: AppTheme.accentOrange),
+          const Text('Recent Activities',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppTheme.textPrimary)),
+          const SizedBox(height: 16),
+          ...s.recentActivities.take(4).map((a) {
+            final entry = iconMap[a.type] ?? iconMap[ActivityType.report]!;
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 14),
+              child: Row(
+                children: [
+                  Container(
+                    width: 40, height: 40,
+                    decoration: BoxDecoration(color: entry.$3, borderRadius: BorderRadius.circular(10)),
+                    child: Icon(entry.$1, color: entry.$2, size: 20),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(a.title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppTheme.textPrimary)),
+                        Text(a.subtitle, style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
+                      ],
+                    ),
+                  ),
+                  Text(a.time, style: const TextStyle(fontSize: 11, color: AppTheme.textMuted)),
+                ],
+              ),
+            );
+          }),
+          const Divider(color: AppTheme.dividerColor),
+          Center(
+            child: TextButton(
+              onPressed: () => onTabChange(6),
+              child: const Text('View All Activities',
+                  style: TextStyle(color: Color(0xFF4F46E5), fontSize: 13, fontWeight: FontWeight.w600)),
+            ),
+          ),
         ],
       ),
     );
   }
-}
 
-class _StatCardData {
-  final String title;
-  final String value;
-  final String subtitle;
-  final IconData icon;
-  final List<Color> gradient;
-
-
-  const _StatCardData({
-    required this.title,
-    required this.value,
-    required this.subtitle,
-    required this.icon,
-    required this.gradient,
-  });
-}
-
-class _StatCard extends StatefulWidget {
-  final _StatCardData data;
-  const _StatCard({required this.data});
-
-  @override
-  State<_StatCard> createState() => _StatCardState();
-}
-
-class _StatCardState extends State<_StatCard>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _ctrl;
-  late Animation<double> _scale;
-  bool _hovered = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _ctrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-    );
-    _scale = Tween<double>(begin: 1.0, end: 1.03).animate(
-      CurvedAnimation(parent: _ctrl, curve: Curves.easeOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final d = widget.data;
-    return MouseRegion(
-      onEnter: (_) { _ctrl.forward(); setState(() => _hovered = true); },
-      onExit: (_) { _ctrl.reverse(); setState(() => _hovered = false); },
-      child: AnimatedBuilder(
-        animation: _scale,
-        builder: (_, child) => Transform.scale(scale: _scale.value, child: child),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.all(22),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                d.gradient[0].withValues(alpha: _hovered ? 0.22 : 0.12),
-                d.gradient[1].withValues(alpha: _hovered ? 0.14 : 0.06),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: d.gradient[0].withValues(alpha: _hovered ? 0.5 : 0.25),
-            ),
-            boxShadow: _hovered
-                ? [
-                    BoxShadow(
-                      color: d.gradient[0].withValues(alpha: 0.25),
-                      blurRadius: 20,
-                      offset: const Offset(0, 6),
-                    )
-                  ]
-                : [],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: d.gradient[0].withValues(alpha: 0.18),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(d.icon, color: d.gradient[0], size: 22),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: d.gradient[0].withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      d.subtitle,
-                      style: TextStyle(color: d.gradient[0], fontSize: 10, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 18),
-              Text(
-                d.value,
-                style: const TextStyle(
-                  color: AppTheme.textPrimary,
-                  fontSize: 28,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -1,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(d.title, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ActivityTile extends StatelessWidget {
-  final RecentActivity activity;
-  const _ActivityTile({required this.activity});
-
-  @override
-  Widget build(BuildContext context) {
-    final color = activity.type == ActivityType.teacher ? AppTheme.accentIndigo : AppTheme.accentPurple;
-    final icon = activity.type == ActivityType.teacher ? Icons.school_rounded : Icons.person_rounded;
-
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
-        child: Icon(icon, color: color, size: 20),
-      ),
-      title: Text(activity.title, style: const TextStyle(color: AppTheme.textPrimary, fontWeight: FontWeight.w600, fontSize: 14)),
-      subtitle: Text(activity.subtitle, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
-      trailing: Text(activity.time.split('T')[0], style: const TextStyle(color: AppTheme.textMuted, fontSize: 11)),
-    );
-  }
-}
-
-class _MiniBarChart extends StatelessWidget {
-  final String label;
-  final double value;
-  final double max;
-  final Color color;
-
-  const _MiniBarChart({required this.label, required this.value, required this.max, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    final frac = max > 0 ? (value / max).clamp(0.0, 1.0) : 0.0;
-    return Column(
+  // ── Bottom row: Donut + Pending Requests ──
+  Widget _bottomRow(DashboardStats s, VoidCallback onViewRequests) {
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(label, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
-            Text('${(frac * 100).toStringAsFixed(0)}%', style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w700)),
-          ],
+        Expanded(
+          child: StudentDonutChart(
+            active: s.activeStudents,
+            pending: s.pendingStudents,
+            inactive: s.inactiveStudents,
+          ),
         ),
-        const SizedBox(height: 6),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: LinearProgressIndicator(value: frac, backgroundColor: AppTheme.dividerColor, color: color, minHeight: 6),
-        ),
+        const SizedBox(width: 16),
+        Expanded(child: _pendingRequests(s, onViewRequests)),
       ],
+    );
+  }
+
+  // ── Pending Requests card ──
+  Widget _pendingRequests(DashboardStats s, VoidCallback onViewRequests) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.dividerColor),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Pending Requests',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppTheme.textPrimary)),
+              TextButton(
+                onPressed: onViewRequests,
+                child: const Text('View All',
+                    style: TextStyle(color: Color(0xFF4F46E5), fontSize: 13, fontWeight: FontWeight.w600)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          if (s.pendingRequests.isEmpty)
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.all(24),
+                child: Text('No pending requests', style: TextStyle(color: AppTheme.textMuted, fontSize: 13)),
+              ),
+            )
+          else
+            ...s.pendingRequests.take(3).map((r) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: const Color(0xFF4F46E5).withValues(alpha: 0.12),
+                        child: Text(
+                          r.name.isNotEmpty ? r.name[0].toUpperCase() : '?',
+                          style: const TextStyle(color: Color(0xFF4F46E5), fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(r.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppTheme.textPrimary)),
+                            Text('${r.course} • Sem ${r.semester}', style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(r.email, style: const TextStyle(fontSize: 11, color: AppTheme.textMuted)),
+                          Text(r.phone, style: const TextStyle(fontSize: 11, color: AppTheme.textMuted)),
+                        ],
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(Icons.check_circle_rounded, color: AppTheme.accentGreen, size: 22),
+                      const SizedBox(width: 4),
+                      Icon(Icons.cancel_rounded, color: AppTheme.accentRed, size: 22),
+                    ],
+                  ),
+                )),
+          if (s.pendingRequests.isNotEmpty) ...[
+            const Divider(color: AppTheme.dividerColor),
+            Center(
+              child: TextButton(
+                onPressed: onViewRequests,
+                child: const Text('View All Requests',
+                    style: TextStyle(color: Color(0xFF4F46E5), fontSize: 13, fontWeight: FontWeight.w600)),
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
