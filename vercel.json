@@ -1,9 +1,9 @@
 {
   "version": 2,
-  "outputDirectory": "build/web",
-  "buildCommand": "flutter build web",
+  "outputDirectory": "flutter_frontend/build/web",
+  "buildCommand": "bash flutter_frontend/build.sh",
   "routes": [
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
-}
+}
