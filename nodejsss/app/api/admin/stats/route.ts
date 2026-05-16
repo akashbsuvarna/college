@@ -63,7 +63,19 @@ export async function GET() {
       attendanceRate: 82.0,
       presentCount: Math.round(activeStudents * 0.82),
       absentCount: Math.round(activeStudents * 0.18),
+      weeklyAttendance: [
+        { day: "Mon", percentage: 70 },
+        { day: "Tue", percentage: 85 },
+        { day: "Wed", percentage: 82 },
+        { day: "Thu", percentage: 78 },
+        { day: "Fri", percentage: 92 },
+        { day: "Sat", percentage: 88 },
+      ],
       recentActivities,
+      pendingRequests: [
+        { name: "mohan", course: "BCA", semester: 3, email: "abcd@gmail.com", phone: "987654321" },
+        { name: "rohan", course: "BBA", semester: 1, email: "rohan@gmail.com", phone: "987654322" },
+      ],
     });
   } catch (error: any) {
     return NextResponse.json(
