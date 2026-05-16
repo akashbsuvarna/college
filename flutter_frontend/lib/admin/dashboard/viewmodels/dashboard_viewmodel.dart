@@ -38,27 +38,27 @@ class DashboardViewModel extends ChangeNotifier {
       // Fetch main dashboard stats
       final statsRes = await http
           .get(Uri.parse(AppConstants.dashboardStats), headers: headers)
-          .timeout(const Duration(seconds: 10));
+          .timeout(const Duration(seconds: 60));
 
       // Fetch courses count
       final coursesRes = await http
           .get(Uri.parse(AppConstants.coursesEndpoint), headers: headers)
-          .timeout(const Duration(seconds: 10));
+          .timeout(const Duration(seconds: 60));
 
       // Fetch subjects count
       final subjectsRes = await http
           .get(Uri.parse(AppConstants.subjectsEndpoint), headers: headers)
-          .timeout(const Duration(seconds: 10));
+          .timeout(const Duration(seconds: 60));
 
       // Fetch pending students
       final pendingRes = await http
           .get(Uri.parse('${AppConstants.studentsEndpoint}?status=pending'), headers: headers)
-          .timeout(const Duration(seconds: 10));
+          .timeout(const Duration(seconds: 60));
 
       // Fetch active students count
       final activeRes = await http
           .get(Uri.parse('${AppConstants.studentsEndpoint}?status=active'), headers: headers)
-          .timeout(const Duration(seconds: 10));
+          .timeout(const Duration(seconds: 60));
 
       if (statsRes.statusCode == 200) {
         final json = jsonDecode(statsRes.body) as Map<String, dynamic>;

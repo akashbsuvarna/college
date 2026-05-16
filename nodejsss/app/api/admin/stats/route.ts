@@ -3,11 +3,11 @@ import Student from "../../../models/Student";
 import Teacher from "../../../models/Teacher";
 import Course from "../../../models/Course";
 import Subject from "../../../models/Subject";
-import { connectDB } from "../../../config/db";
+import dbConnect from "@/app/config/dbConnect";
 
 export async function GET() {
   try {
-    await connectDB();
+    await dbConnect();
 
     const studentCount = await Student.countDocuments();
     const teacherCount = await Teacher.countDocuments();

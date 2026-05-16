@@ -1,7 +1,7 @@
 import '../../config/api_config.dart';
 
 class AppConstants {
-  // Base URL for Next.js backend
+  // Base URL for API
   static final String baseUrl = ApiConfig.baseUrl;
 
   // Endpoints
@@ -10,9 +10,11 @@ class AppConstants {
   static final String studentsEndpoint = '$baseUrl/admin/students';
   static final String coursesEndpoint = '$baseUrl/admin/courses';
   static final String subjectsEndpoint = '$baseUrl/admin/subjects';
+  static final String attendanceEndpoint = '$baseUrl/attendance';
 
   // Sidebar menu items
   static const String menuDashboard = 'Dashboard';
   static const String menuTeachers = 'Teachers';
   static const String menuStudents = 'Students';
 }
+
