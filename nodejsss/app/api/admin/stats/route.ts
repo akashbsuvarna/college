@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import Student from "../../../models/Student";
-import Teacher from "../../../models/Teacher";
-import Course from "../../../models/Course";
-import Subject from "../../../models/Subject";
+import Student from "@/app/models/Student";
+import Teacher from "@/app/models/Teacher";
+import Course from "@/app/models/Course";
+import Subject from "@/app/models/Subject";
 import dbConnect from "@/app/config/dbConnect";
 
 export async function GET() {
