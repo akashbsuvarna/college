@@ -61,7 +61,7 @@ class _DashboardViewState extends State<DashboardView> {
 
   Widget _buildTopBar() {
     return Container(
-      height: 64,
+      height: 72,
       padding: const EdgeInsets.symmetric(horizontal: 24),
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -70,35 +70,37 @@ class _DashboardViewState extends State<DashboardView> {
       child: Row(
         children: [
           Text(_pageTitles[_selectedIndex],
-              style: const TextStyle(color: AppTheme.textPrimary, fontSize: 20, fontWeight: FontWeight.w700)),
+              style: const TextStyle(color: AppTheme.textPrimary, fontSize: 22, fontWeight: FontWeight.w800)),
           const Spacer(),
           Flexible(
             child: Container(
-              constraints: const BoxConstraints(maxWidth: 240),
-              height: 38,
+              constraints: const BoxConstraints(maxWidth: 400),
+              height: 42,
               decoration: BoxDecoration(
                 color: const Color(0xFFF3F4F6),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: AppTheme.dividerColor),
               ),
               child: const TextField(
-                style: TextStyle(color: AppTheme.textPrimary, fontSize: 13),
+                style: TextStyle(color: AppTheme.textPrimary, fontSize: 14),
                 decoration: InputDecoration(
                   hintText: 'Search...',
-                  hintStyle: TextStyle(color: AppTheme.textMuted, fontSize: 13),
-                  prefixIcon: Icon(Icons.search_rounded, color: AppTheme.textMuted, size: 18),
+                  hintStyle: TextStyle(color: AppTheme.textMuted, fontSize: 14),
+                  prefixIcon: Icon(Icons.search_rounded, color: AppTheme.textMuted, size: 20),
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(vertical: 10),
+                  contentPadding: EdgeInsets.symmetric(vertical: 9),
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 16),
-          CircleAvatar(
-            radius: 18,
-            backgroundColor: AppTheme.accentIndigo.withValues(alpha: 0.15),
-            child: const Text('A',
-                style: TextStyle(color: AppTheme.accentIndigo, fontWeight: FontWeight.w700, fontSize: 14)),
+          const SizedBox(width: 20),
+          Container(
+            width: 40, height: 40,
+            decoration: BoxDecoration(color: Color(0xFFE0E7FF), borderRadius: BorderRadius.circular(12)),
+            child: Center(
+              child: const Text('A',
+                  style: TextStyle(color: Color(0xFF4F46E5), fontWeight: FontWeight.w800, fontSize: 16)),
+            ),
           ),
         ],
       ),
@@ -210,21 +212,21 @@ class _DashboardContent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Welcome back, Admin User!',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: AppTheme.textPrimary)),
-            const SizedBox(height: 4),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: AppTheme.textPrimary, letterSpacing: -0.5)),
+            const SizedBox(height: 6),
             Text("Here's what's happening in your college today.",
-                style: TextStyle(fontSize: 14, color: AppTheme.textSecondary)),
+                style: TextStyle(fontSize: 15, color: AppTheme.textSecondary, fontWeight: FontWeight.w500)),
           ],
         ),
         Row(
           children: [
-            const Icon(Icons.calendar_today_rounded, size: 16, color: AppTheme.textMuted),
-            const SizedBox(width: 8),
+            const Icon(Icons.calendar_month_rounded, size: 20, color: AppTheme.textMuted),
+            const SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(dateStr, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppTheme.textPrimary)),
-                Text(dayStr, style: const TextStyle(fontSize: 12, color: AppTheme.textMuted)),
+                Text(dateStr, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppTheme.textPrimary)),
+                Text(dayStr, style: const TextStyle(fontSize: 13, color: AppTheme.textMuted, fontWeight: FontWeight.w500)),
               ],
             ),
           ],
@@ -244,8 +246,8 @@ class _DashboardContent extends StatelessWidget {
             width: (constraints.maxWidth - 48) / 4,
             child: DashboardStatCard(
               title: 'Total Students', value: '${s.totalStudents}',
-              change: '↑ ${s.pendingStudents} pending',
-              icon: Icons.people_alt_rounded,
+              change: '12',
+              icon: Icons.group_rounded,
               color: const Color(0xFF4F46E5), bgColor: const Color(0xFFEEF2FF),
             ),
           ),
@@ -253,17 +255,17 @@ class _DashboardContent extends StatelessWidget {
             width: (constraints.maxWidth - 48) / 4,
             child: DashboardStatCard(
               title: 'Total Teachers', value: '${s.totalTeachers}',
-              change: '↑ ${s.activeTeachers} active',
+              change: '2',
               icon: Icons.school_rounded,
-              color: const Color(0xFF0891B2), bgColor: const Color(0xFFECFEFF),
+              color: const Color(0xFF0EA5E9), bgColor: const Color(0xFFF0F9FF),
             ),
           ),
           SizedBox(
             width: (constraints.maxWidth - 48) / 4,
             child: DashboardStatCard(
               title: 'Total Courses', value: '${s.totalCourses}',
-              change: '↑ courses',
-              icon: Icons.book_rounded,
+              change: '3',
+              icon: Icons.menu_book_rounded,
               color: const Color(0xFFF59E0B), bgColor: const Color(0xFFFFFBEB),
             ),
           ),
@@ -271,9 +273,9 @@ class _DashboardContent extends StatelessWidget {
             width: (constraints.maxWidth - 48) / 4,
             child: DashboardStatCard(
               title: 'Total Subjects', value: '${s.totalSubjects}',
-              change: '↑ subjects',
+              change: '5',
               icon: Icons.layers_rounded,
-              color: const Color(0xFFEF4444), bgColor: const Color(0xFFFEF2F2),
+              color: const Color(0xFF8B5CF6), bgColor: const Color(0xFFF5F3FF),
             ),
           ),
         ],
@@ -304,50 +306,57 @@ class _DashboardContent extends StatelessWidget {
     };
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppTheme.dividerColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Recent Activities',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppTheme.textPrimary)),
-          const SizedBox(height: 16),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppTheme.textPrimary)),
+          const SizedBox(height: 20),
           ...s.recentActivities.take(4).map((a) {
             final entry = iconMap[a.type] ?? iconMap[ActivityType.report]!;
             return Padding(
-              padding: const EdgeInsets.only(bottom: 14),
+              padding: const EdgeInsets.only(bottom: 20),
               child: Row(
                 children: [
                   Container(
-                    width: 40, height: 40,
-                    decoration: BoxDecoration(color: entry.$3, borderRadius: BorderRadius.circular(10)),
+                    width: 44, height: 44,
+                    decoration: BoxDecoration(color: entry.$3, shape: BoxShape.circle),
                     child: Icon(entry.$1, color: entry.$2, size: 20),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(a.title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppTheme.textPrimary)),
-                        Text(a.subtitle, style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
+                        Text(a.title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppTheme.textPrimary)),
+                        const SizedBox(height: 2),
+                        Text(a.subtitle, style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary, fontWeight: FontWeight.w500)),
                       ],
                     ),
                   ),
-                  Text(a.time, style: const TextStyle(fontSize: 11, color: AppTheme.textMuted)),
+                  Text(a.time, style: const TextStyle(fontSize: 12, color: AppTheme.textMuted, fontWeight: FontWeight.w500)),
                 ],
               ),
             );
           }),
-          const Divider(color: AppTheme.dividerColor),
-          Center(
-            child: TextButton(
+          const SizedBox(height: 4),
+          SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: OutlinedButton(
               onPressed: () => onTabChange(6),
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: AppTheme.dividerColor),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
               child: const Text('View All Activities',
-                  style: TextStyle(color: Color(0xFF4F46E5), fontSize: 13, fontWeight: FontWeight.w600)),
+                  style: TextStyle(color: Color(0xFF4F46E5), fontSize: 14, fontWeight: FontWeight.w700)),
             ),
           ),
         ],
@@ -376,10 +385,10 @@ class _DashboardContent extends StatelessWidget {
   // ── Pending Requests card ──
   Widget _pendingRequests(DashboardStats s, VoidCallback onViewRequests) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppTheme.dividerColor),
       ),
       child: Column(
@@ -389,69 +398,86 @@ class _DashboardContent extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Pending Requests',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppTheme.textPrimary)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppTheme.textPrimary)),
               TextButton(
                 onPressed: onViewRequests,
                 child: const Text('View All',
-                    style: TextStyle(color: Color(0xFF4F46E5), fontSize: 13, fontWeight: FontWeight.w600)),
+                    style: TextStyle(color: Color(0xFF4F46E5), fontSize: 14, fontWeight: FontWeight.w700)),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 20),
           if (s.pendingRequests.isEmpty)
             const Center(
               child: Padding(
-                padding: EdgeInsets.all(24),
-                child: Text('No pending requests', style: TextStyle(color: AppTheme.textMuted, fontSize: 13)),
+                padding: EdgeInsets.all(32),
+                child: Text('No pending requests', style: TextStyle(color: AppTheme.textMuted, fontSize: 14, fontWeight: FontWeight.w500)),
               ),
             )
           else
             ...s.pendingRequests.take(3).map((r) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.only(bottom: 20),
                   child: Row(
                     children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundColor: const Color(0xFF4F46E5).withValues(alpha: 0.12),
-                        child: Text(
-                          r.name.isNotEmpty ? r.name[0].toUpperCase() : '?',
-                          style: const TextStyle(color: Color(0xFF4F46E5), fontWeight: FontWeight.w700),
+                      Container(
+                        width: 48, height: 48,
+                        decoration: BoxDecoration(color: const Color(0xFF4F46E5), borderRadius: BorderRadius.circular(14)),
+                        child: Center(
+                          child: Text(
+                            r.name.isNotEmpty ? r.name[0].toUpperCase() : '?',
+                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 18),
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(r.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppTheme.textPrimary)),
-                            Text('${r.course} • Sem ${r.semester}', style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
+                            Text(r.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: AppTheme.textPrimary)),
+                            const SizedBox(height: 2),
+                            Text('${r.course} • Sem ${r.semester}', style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary, fontWeight: FontWeight.w500)),
                           ],
                         ),
                       ),
+                      const SizedBox(width: 12),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(r.email, style: const TextStyle(fontSize: 11, color: AppTheme.textMuted)),
-                          Text(r.phone, style: const TextStyle(fontSize: 11, color: AppTheme.textMuted)),
+                          Text(r.email, style: const TextStyle(fontSize: 12, color: AppTheme.textMuted, fontWeight: FontWeight.w500)),
+                          Text(r.phone, style: const TextStyle(fontSize: 12, color: AppTheme.textMuted, fontWeight: FontWeight.w500)),
                         ],
                       ),
-                      const SizedBox(width: 8),
-                      Icon(Icons.check_circle_rounded, color: AppTheme.accentGreen, size: 22),
-                      const SizedBox(width: 4),
-                      Icon(Icons.cancel_rounded, color: AppTheme.accentRed, size: 22),
+                      const SizedBox(width: 20),
+                      Container(
+                        width: 32, height: 32,
+                        decoration: BoxDecoration(color: const Color(0xFFDCFCE7), shape: BoxShape.circle),
+                        child: Icon(Icons.check_rounded, color: AppTheme.accentGreen, size: 20),
+                      ),
+                      const SizedBox(width: 10),
+                      Container(
+                        width: 32, height: 32,
+                        decoration: BoxDecoration(color: const Color(0xFFFEE2E2), shape: BoxShape.circle),
+                        child: Icon(Icons.close_rounded, color: AppTheme.accentRed, size: 20),
+                      ),
                     ],
                   ),
                 )),
-          if (s.pendingRequests.isNotEmpty) ...[
-            const Divider(color: AppTheme.dividerColor),
-            Center(
-              child: TextButton(
+          const SizedBox(height: 4),
+          if (s.pendingRequests.isNotEmpty)
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: OutlinedButton(
                 onPressed: onViewRequests,
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: AppTheme.dividerColor),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
                 child: const Text('View All Requests',
-                    style: TextStyle(color: Color(0xFF4F46E5), fontSize: 13, fontWeight: FontWeight.w600)),
+                    style: TextStyle(color: Color(0xFF4F46E5), fontSize: 14, fontWeight: FontWeight.w700)),
               ),
             ),
-          ],
         ],
       ),
     );

@@ -44,13 +44,14 @@ class _AdminSidebarState extends State<AdminSidebar>
   static const double _collapsedWidth = 70;
 
   static const List<SidebarItem> _items = [
-    SidebarItem(icon: Icons.dashboard_rounded, label: 'Dashboard', index: 0),
+    SidebarItem(icon: Icons.grid_view_rounded, label: 'Dashboard', index: 0),
     SidebarItem(icon: Icons.school_rounded, label: 'Teachers', index: 1),
     SidebarItem(icon: Icons.person_rounded, label: 'Students', index: 2),
     SidebarItem(icon: Icons.book_rounded, label: 'Courses', index: 3),
     SidebarItem(icon: Icons.subject_rounded, label: 'Subjects', index: 4),
     SidebarItem(icon: Icons.qr_code_scanner_rounded, label: 'Attendance', index: 5),
     SidebarItem(icon: Icons.notifications_rounded, label: 'Notifications', index: 6),
+    SidebarItem(icon: Icons.settings_rounded, label: 'Settings', index: 7),
   ];
 
   @override
@@ -139,14 +140,10 @@ class _AdminSidebarState extends State<AdminSidebar>
                   width: 38,
                   height: 38,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: AppTheme.gradientBlue,
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
+                    color: Color(0xFF3B82F6),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(Icons.admin_panel_settings_rounded,
+                  child: Icon(Icons.auto_awesome,
                       color: Colors.white, size: 20),
                 ),
                 const SizedBox(width: 10),
@@ -208,13 +205,9 @@ class _AdminSidebarState extends State<AdminSidebar>
         duration: const Duration(milliseconds: 180),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppTheme.accentIndigo.withValues(alpha: 0.2)
+              ? AppTheme.accentIndigo.withValues(alpha: 0.12)
               : Colors.transparent,
-          borderRadius: BorderRadius.circular(10),
-          border: isSelected
-              ? Border.all(
-                  color: AppTheme.accentIndigo.withValues(alpha: 0.2), width: 1)
-              : null,
+          borderRadius: BorderRadius.circular(12),
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(10),

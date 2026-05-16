@@ -30,31 +30,44 @@ class DashboardStatCard extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppTheme.dividerColor),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 2)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4)),
         ],
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 48, height: 48,
-            decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(12)),
-            child: Icon(icon, color: color, size: 24),
+          Row(
+            children: [
+              Container(
+                width: 44, height: 44,
+                decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(12)),
+                child: Icon(icon, color: color, size: 22),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: TextStyle(color: AppTheme.textSecondary, fontSize: 13, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 2),
+                    Text(value, style: const TextStyle(color: AppTheme.textPrimary, fontSize: 26, fontWeight: FontWeight.w800, letterSpacing: -0.5)),
+                  ],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: TextStyle(color: AppTheme.textSecondary, fontSize: 13, fontWeight: FontWeight.w500)),
-                const SizedBox(height: 4),
-                Text(value, style: const TextStyle(color: AppTheme.textPrimary, fontSize: 28, fontWeight: FontWeight.w800, letterSpacing: -1)),
-                const SizedBox(height: 2),
-                Text(change, style: TextStyle(color: AppTheme.accentGreen, fontSize: 12, fontWeight: FontWeight.w600)),
-              ],
-            ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Icon(Icons.trending_up_rounded, color: AppTheme.accentGreen, size: 14),
+              const SizedBox(width: 4),
+              Text(change, style: TextStyle(color: AppTheme.accentGreen, fontSize: 12, fontWeight: FontWeight.w700)),
+              const SizedBox(width: 4),
+              Text('this month', style: TextStyle(color: AppTheme.textMuted, fontSize: 12)),
+            ],
           ),
         ],
       ),
@@ -174,14 +187,15 @@ class _LineChartPainter extends CustomPainter {
     // Line
     final linePaint = Paint()
       ..color = const Color(0xFF4F46E5)
-      ..strokeWidth = 2.5
+      ..strokeWidth = 3.0
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
     final linePath = Path()..moveTo(points.first.dx, points.first.dy);
     for (int i = 1; i < points.length; i++) {
-      final cp1x = (points[i - 1].dx + points[i].dx) / 2;
-      linePath.cubicTo(cp1x, points[i - 1].dy, cp1x, points[i].dy, points[i].dx, points[i].dy);
+      final cp1 = Offset((points[i - 1].dx + points[i].dx) / 2, points[i - 1].dy);
+      final cp2 = Offset((points[i - 1].dx + points[i].dx) / 2, points[i].dy);
+      linePath.cubicTo(cp1.dx, cp1.dy, cp2.dx, cp2.dy, points[i].dx, points[i].dy);
     }
     canvas.drawPath(linePath, linePaint);
 
@@ -245,22 +259,37 @@ class AttendanceSummaryRow extends StatelessWidget {
   Widget _pill(IconData icon, String val, String label, Color color) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.06),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withValues(alpha: 0.15)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppTheme.dividerColor),
         ),
         child: Row(
           children: [
-            Icon(icon, color: color, size: 20),
-            const SizedBox(width: 10),
+            Container(
+              width: 36, height: 36,
+              decoration: BoxDecoration(color: color.withValues(alpha: 0.1), shape: BoxShape.circle),
+              child: Icon(icon, color: color, size: 18),
+            ),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(val, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppTheme.textPrimary)),
-                  Text(label, style: const TextStyle(fontSize: 10, color: AppTheme.textSecondary, height: 1.3)),
+                  Text(label.replaceAll('\n', ' '), style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary, fontWeight: FontWeight.w500)),
+                  const SizedBox(height: 2),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(val, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: AppTheme.textPrimary)),
+                      if (label.contains('Attendance')) ...[
+                        const SizedBox(width: 2),
+                        const Text('Students', style: TextStyle(fontSize: 10, color: AppTheme.textMuted)),
+                      ],
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -319,9 +348,9 @@ class StudentDonutChart extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _legendRow('Active Students', active, total, const Color(0xFF4F46E5)),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 12),
                     _legendRow('Pending Requests', pending, total, const Color(0xFFF59E0B)),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 12),
                     _legendRow('Inactive Students', inactive, total, const Color(0xFF9CA3AF)),
                   ],
                 ),
@@ -338,9 +367,10 @@ class StudentDonutChart extends StatelessWidget {
     return Row(
       children: [
         Container(width: 10, height: 10, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-        const SizedBox(width: 8),
-        Expanded(child: Text(label, style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary))),
-        Text('$count ($pct%)', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppTheme.textPrimary)),
+        const SizedBox(width: 10),
+        Expanded(child: Text(label, style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary, fontWeight: FontWeight.w500))),
+        Text('$count ', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppTheme.textPrimary)),
+        Text('($pct%)', style: const TextStyle(fontSize: 12, color: AppTheme.textMuted)),
       ],
     );
   }
