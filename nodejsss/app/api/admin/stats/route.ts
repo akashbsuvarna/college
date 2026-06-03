@@ -9,24 +9,27 @@ export async function GET() {
   try {
     await dbConnect();
 
-    const studentCount = await Student.countDocuments();
-    const teacherCount = await Teacher.countDocuments();
-    const activeStudents = await Student.countDocuments({ status: "active" });
-    const pendingStudents = await Student.countDocuments({ status: "pending" });
+    const [
+      studentCount,
+      teacherCount,
+      activeStudents,
+      pendingStudents,
+      recentStudents,
+      recentTeachers,
+      courseCount,
+      subjectCount
+    ] = await Promise.all([
+      Student.countDocuments(),
+      Teacher.countDocuments(),
+      Student.countDocuments({ status: "active" }),
+      Student.countDocuments({ status: "pending" }),
+      Student.find().sort({ createdAt: -1 }).limit(2).select("fullName createdAt status"),
+      Teacher.find().sort({ createdAt: -1 }).limit(2).select("fullName createdAt"),
+      Course.countDocuments().catch(() => 0),
+      Subject.countDocuments().catch(() => 0)
+    ]);
+
     const inactiveStudents = studentCount - activeStudents - pendingStudents;
-
-    const courseCount = await Course.countDocuments().catch(() => 0);
-    const subjectCount = await Subject.countDocuments().catch(() => 0);
-
-    // Recent activities from last created students/teachers
-    const recentStudents = await Student.find()
-      .sort({ createdAt: -1 })
-      .limit(2)
-      .select("fullName createdAt status");
-    const recentTeachers = await Teacher.find()
-      .sort({ createdAt: -1 })
-      .limit(2)
-      .select("fullName createdAt");
 
     const recentActivities: any[] = [];
 

@@ -51,7 +51,6 @@ class _AdminSidebarState extends State<AdminSidebar>
     SidebarItem(icon: Icons.subject_rounded, label: 'Subjects', index: 4),
     SidebarItem(icon: Icons.qr_code_scanner_rounded, label: 'Attendance', index: 5),
     SidebarItem(icon: Icons.notifications_rounded, label: 'Notifications', index: 6),
-    SidebarItem(icon: Icons.settings_rounded, label: 'Settings', index: 7),
   ];
 
   @override
